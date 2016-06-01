@@ -1,0 +1,21 @@
+{
+  "name": "mongodb-migrator",
+  "version": "0.0.1",
+  "description": "",
+  "main": "./lib/migrator.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "mongodb",
+    "migration"
+  ],
+  "author": "plusbpm",
+  "license": "ISC",
+  "dependencies": {
+    "debug": "^2.2.0",
+    "mkdirp": "^0.5.1",
+    "mongodb": "^2.1.21",
+    "uuid": "^2.0.2"
+  }
+}
