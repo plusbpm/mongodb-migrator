@@ -1,8 +1,10 @@
+// process.env.DEBUG="mongodb-migrator:*";
+
 var mm = require("./");
 
 var mmm = new mm({
 	host: 'asdasd',
 });
 
-mmm.create("просто проверка", ['sdasd1','sasdasd2']);
-
+// mmm.detectCircularity();
+mmm.create("f6",["f6666"]);

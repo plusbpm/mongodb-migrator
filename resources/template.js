@@ -1,6 +1,6 @@
 module.exports = {
-	id: '${id}',
-	afterDeps: [${afterDeps}],
+	name: '${name}',
+	after: [${after}],
 	up: function (db, cb) {
 		cb();
 	},
