@@ -1,6 +1,6 @@
 module.exports = {
 	name: '${name}',
-	after: [${after}],
+	after: ${after},
 	up: function (db, cb) {
 		cb();
 	},
