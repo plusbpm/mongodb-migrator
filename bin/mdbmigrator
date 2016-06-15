@@ -1,0 +1,46 @@
+#!/usr/bin/env node
+
+var path = require('path');
+var fs   = require('fs');
+
+var lib  = path.join(path.dirname(fs.realpathSync(__filename)), '../lib');
+
+var MigratorClass = require(lib + '/migrator');
+var args = process.argv.slice(2);
+
+var cmd = args.shift();
+
+var options = {};
+var params = [];
+
+while(args.length) {
+	var opt = args.shift();
+
+	if(opt.search(/^--/) > -1) {
+		options[opt.replace(/^--/,'')] = args.shift();
+	} else {
+		params.push(opt);
+	}
+
+}
+
+var migratorInstance = new MigratorClass(options);
+
+if(typeof migratorInstance[cmd] == "undefined") {
+	console.log("Unknown command");
+	return;
+}
+
+Promise.resolve().then(function(){
+	return migratorInstance[cmd](params[0], params[1]);	
+}).catch(usage).then(function(r) {
+	console.log(r);
+	migratorInstance.disconnect();
+});
+
+
+function usage () {
+	console.log("usage ...");
+}
+
+
