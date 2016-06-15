@@ -10,6 +10,7 @@ var args = process.argv.slice(2);
 
 var cmd = args.shift();
 
+var defaultOptions = require("../lib/defaults");
 var options = {};
 var params = [];
 
@@ -21,26 +22,34 @@ while(args.length) {
 	} else {
 		params.push(opt);
 	}
-
 }
 
 var migratorInstance = new MigratorClass(options);
 
 if(typeof migratorInstance[cmd] == "undefined") {
 	console.log("Unknown command");
+	usage();
 	return;
 }
 
 Promise.resolve().then(function(){
 	return migratorInstance[cmd](params[0], params[1]);	
 }).catch(usage).then(function(r) {
-	console.log(r);
 	migratorInstance.disconnect();
 });
 
 
 function usage () {
-	console.log("usage ...");
+	var tabs = "\t\t\t\t";
+	console.log("Usage: mdbmigrator command [options] [migrationName [dependenceName]]\n");
+	console.log("Options:");
+	console.log("\t--mongourl", tabs + "mongo connection url (highest priority), default - " + defaultOptions.mongourl);
+	console.log("\t--host", tabs + "\tmongodb server host, default - " + defaultOptions.host);
+	console.log("\t--port", tabs + "\tmongodb server port, default - " + defaultOptions.port);
+	console.log("\t--db", tabs + "\tdatabase name, default - " + defaultOptions.db);
+	console.log("\t--collection", tabs + "collection name for tracking mogrations, default - " + defaultOptions.collection);
+	console.log("\t--directory", tabs + "realtive directory for store migration files, default - " + defaultOptions.directory);
+	console.log("\t--extention", tabs + "extention for migration file, default - " + defaultOptions.extention);
 }
 
 
