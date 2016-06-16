@@ -1,8 +1,11 @@
 {
   "name": "mongodb-migrator",
-  "version": "0.0.1",
+  "version": "0.5.0",
   "description": "",
   "main": "./lib/migrator.js",
+  "engines": {
+    "node": ">=0.12"
+  }, 
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
