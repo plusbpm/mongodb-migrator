@@ -12,17 +12,28 @@ var cmd = args.shift();
 
 var defaultOptions = require("../lib/defaults");
 var options = {};
+var configFileOptions = null;
 var params = [];
 
 while(args.length) {
 	var opt = args.shift();
+	var isOption = opt.search(/^--/) > -1;
 
-	if(opt.search(/^--/) > -1) {
-		options[opt.replace(/^--/,'')] = args.shift();
-	} else {
+	if(!isOption) {
 		params.push(opt);
+		continue;
 	}
+
+	var optionName = opt.replace(/^--/,'');
+
+	if(optionName === "config") {
+		configFileOptions = require(path.join(process.cwd(), args.shift()));
+	}
+
+	options[optionName] = args.shift();
 }
+
+options = Object.assign(options, configFileOptions);
 
 var migratorInstance = new MigratorClass(options);
 
@@ -42,12 +53,22 @@ Promise.resolve().then(function(){
 function usage () {
 	var tabs = "\t\t\t\t";
 	console.log("Usage: mdbmigrator command [options] [migrationName [dependenceName]]\n");
+	console.log("Commands:");
+	console.log("\tcreate migrationName [dependenceName]", "\tadd new named migration file");
+	console.log("\tcheck", "\t\t\t\t\tchecks for new migrations");
+	console.log("\tapply", "\t\t\t\t\tapply new migrations, if an error occurs, roll back the migration in the reverse order");
+	console.log("\texists migrationName", "\t\t\tdetermines whether there is a named migration 'migrationName'");
+	console.log("\tdetectCircularity", "\t\t\tIt detects the presence of circularity in the dependency\n");
+
 	console.log("Options:");
-	console.log("\t--mongourl", tabs + "mongo connection url (highest priority), default - " + defaultOptions.mongourl);
+	console.log("\t--config", tabs + "configuration file with the keys listed below (js, json)");
+	console.log("\t--mongourl", tabs + "mongo connection url (highest priority)");
 	console.log("\t--host", tabs + "\tmongodb server host, default - " + defaultOptions.host);
 	console.log("\t--port", tabs + "\tmongodb server port, default - " + defaultOptions.port);
 	console.log("\t--db", tabs + "\tdatabase name, default - " + defaultOptions.db);
-	console.log("\t--collection", tabs + "collection name for tracking mogrations, default - " + defaultOptions.collection);
+	console.log("\t--user", tabs + "\tuser name for auth.");
+	console.log("\t--password", tabs + "password for auth.");
+	console.log("\t--collection", tabs + "collection name for tracking migrations, default - " + defaultOptions.collection);
 	console.log("\t--directory", tabs + "realtive directory for store migration files, default - " + defaultOptions.directory);
 	console.log("\t--extention", tabs + "extention for migration file, default - " + defaultOptions.extention);
 }
